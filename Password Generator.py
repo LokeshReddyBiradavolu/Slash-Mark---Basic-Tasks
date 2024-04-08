@@ -1,39 +1,37 @@
-import string
 import random
-
-def generate_password(characters_number):
-    # store all characters in strings
-    lowercase_letters = string.ascii_lowercase
-    uppercase_letters = string.ascii_uppercase
-    digits = string.digits
-    punctuation = string.punctuation
-
-    # calculate the number of characters for each category
-    num_letters = round(characters_number * 0.6)
-    num_digits_punctuations = characters_number - num_letters
-
-    # generate password
-    password = ''.join(random.choices(lowercase_letters, k=num_letters))
-    password += ''.join(random.choices(uppercase_letters, k=num_letters))
-    password += ''.join(random.choices(digits + punctuation, k=num_digits_punctuations))
-
-    # shuffle password
-    password_list = list(password)
-    random.shuffle(password_list)
-    password = ''.join(password_list)
-
-    return password
-
-while True:
-    user_input = input("Enter the number of characters for your password (type 'quit' to exit): ")
-    if user_input.lower() == 'quit':
-        break
-    try:
-        characters_number = int(user_input)
-        if characters_number < 8:
-            print("Your number should be at least 8.")
-        else:
-            password = generate_password(characters_number)
-            print("Strong Password:", password)
-    except ValueError:
-        print("Please enter a valid number or type 'quit' to exit.")
+def generatePassword(pwlength):
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    passwords = [] 
+    for i in pwlength:
+        password = "" 
+        for j in range(i):
+            next_letter_index = random.randrange(len(alphabet))
+            password = password + alphabet[next_letter_index]
+        password = replaceWithNumber(password)
+        password = replaceWithUppercaseLetter(password)
+        passwords.append(password) 
+    return passwords
+def replaceWithNumber(pword):
+    for i in range(random.randrange(1,3)):
+        replace_index = random.randrange(len(pword)//2)
+        pword = pword[0:replace_index] + str(random.randrange(10)) + pword[replace_index+1:]
+        return pword
+def replaceWithUppercaseLetter(pword):
+    for i in range(random.randrange(1,3)):
+        replace_index = random.randrange(len(pword)//2,len(pword))
+        pword = pword[0:replace_index] + pword[replace_index].upper() + pword[replace_index+1:]
+        return pword
+def main():
+    numPasswords = int(input("How many passwords do you want to generate? "))
+    print("Generating " +str(numPasswords)+" passwords")
+    passwordLengths = []
+    print("Minimum length of password should be 3")
+    for i in range(numPasswords):
+        length = int(input("Enter the length of Password #" + str(i+1) + " "))
+        if length<5:
+            length = 5
+        passwordLengths.append(length)
+    Password = generatePassword(passwordLengths)
+    for i in range(numPasswords):
+        print ("Password #"+str(i+1)+" = " + Password[i])
+main()
